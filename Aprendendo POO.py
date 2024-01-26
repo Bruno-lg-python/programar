@@ -4,6 +4,7 @@ from datetime import date
 class Pessoa:
 
     ano_atual = date.today().year
+
     def __init__(self, nome, idade, comendo=False, falando=False):
         self.nome = nome
         self.idade = idade
@@ -63,22 +64,4 @@ p0.comer('Pão com carne')
 p0.falar('nada')
 p0.parar_de_comer()
 p0.falar('Estou aprendendo Programação')
-
-# p1 = Pessoa('Bruno', 27)
-# p1.comer('maçã')
-# p1.falar('POO')
-# p1.parar_de_comer()
-# p1.falar('POO')
-# print(p1.ano_nascimento())
-# 
-# print()
-# 
-# p2 = Pessoa('Andresa', 23)
-# p2.comer('Pão com Ovo')
-# p2.parar_de_comer()
-# p2.falar(' Linguagem Programação PYTHON')
-# p2.parar_de_falar()
-# p2.comer('Janta')
-# p2.comer('Janta')
-# print(p2.ano_nascimento())
 
