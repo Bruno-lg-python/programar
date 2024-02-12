@@ -19,3 +19,7 @@ source venv/bin/activate
 ```pip
 pip3 install -r requirements.txt
 ```
+## Test the server
+```run
+http://127.0.0.1:8000/playground/login/
+```
