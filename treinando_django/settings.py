@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     #django allauth configuration apps
-    'django.contrib.sites',
+    
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -60,8 +60,21 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # add the account middleware
-    'allauth.account.middleware.AccountMiddleware'
+    "allauth.account.middleware.AccountMiddleware",
 ]
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': ''
+        }
+    }
+}
 
 ROOT_URLCONF = "treinando_django.urls"
 
