@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # TREINANDO_DJANGO
 
 This is a repository for a web application that permits you to create polls in realtime
@@ -24,5 +23,3 @@ pip3 install -r requirements.txt
 ```run
 http://127.0.0.1:8000/playground/login/
 ```
-=======
->>>>>>> parent of c445d2a (atualizando README.md)
