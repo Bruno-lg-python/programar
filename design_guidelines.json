@@ -1,0 +1,191 @@
+{
+  "project_name": "Studio Bella Nails - Nail Designer & Beauty Booking",
+  "archetype": "LUXURY & ORGANIC BEAUTY",
+  "colors": {
+    "surfaces": [
+      {
+        "name": "page",
+        "kind": "solid",
+        "bg": "#FAF7F5",
+        "on_bg": "#1C1917",
+        "on_bg_muted": "#57534E",
+        "roles": {
+          "link": "#9F5B60",
+          "error": "#B91C1C",
+          "success": "#15803D"
+        }
+      },
+      {
+        "name": "panel",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#1C1917",
+        "on_bg_muted": "#57534E",
+        "roles": {
+          "link": "#9F5B60",
+          "error": "#B91C1C",
+          "success": "#15803D"
+        }
+      },
+      {
+        "name": "panel_muted",
+        "kind": "solid",
+        "bg": "#F5EBE6",
+        "on_bg": "#1C1917",
+        "on_bg_muted": "#57534E"
+      },
+      {
+        "name": "inverse",
+        "kind": "solid",
+        "bg": "#1F1B1A",
+        "on_bg": "#FAF7F5",
+        "on_bg_muted": "#D6C7C2",
+        "roles": {
+          "link": "#F4B8BE",
+          "error": "#FCA5A5",
+          "success": "#86EFAC"
+        }
+      },
+      {
+        "name": "hero",
+        "kind": "glass",
+        "contrast_against": "#2B1810",
+        "guarantee": "scrim: linear-gradient(to right, rgba(28, 25, 23, 0.88), rgba(28, 25, 23, 0.55)), radial-gradient(circle at 80% 20%, rgba(200, 130, 140, 0.15), transparent 60%)",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#E7E5E4",
+        "roles": {
+          "link": "#FCE7F3",
+          "error": "#FCA5A5",
+          "success": "#86EFAC"
+        }
+      },
+      {
+        "name": "badge_rose",
+        "kind": "solid",
+        "bg": "#FCE7F3",
+        "on_bg": "#831843",
+        "on_bg_muted": "#9D174D"
+      },
+      {
+        "name": "badge_gold",
+        "kind": "solid",
+        "bg": "#FEF3C7",
+        "on_bg": "#78350F",
+        "on_bg_muted": "#92400E"
+      },
+      {
+        "name": "whatsapp_bubble",
+        "kind": "solid",
+        "bg": "#DCF8C6",
+        "on_bg": "#064E3B",
+        "on_bg_muted": "#065F46"
+      }
+    ],
+    "accent": "#9F5B60",
+    "on_accent": "#FFFFFF",
+    "accent_hover": "#87474C",
+    "gold_accent": "#C29B38",
+    "border_subtle": "#E7DFD8"
+  },
+  "typography": {
+    "font_heading": "'Playfair Display Variable', serif",
+    "font_sans": "'DM Sans Variable', sans-serif",
+    "font_mono": "'JetBrains Mono Variable', monospace",
+    "scale_px": {
+      "display": 56,
+      "h1": 44,
+      "h2": 32,
+      "h3": 22,
+      "body": 16,
+      "caption": 14
+    },
+    "font_import": "@import \"@fontsource-variable/playfair-display\";\n@import \"@fontsource-variable/dm-sans\";\n@import \"@fontsource-variable/jetbrains-mono\";"
+  },
+  "entry_surfaces": {
+    "/": "editorial split luxury hero — brand story + quick booking CTA left, featured nail artistry card right",
+    "/agendar": "guided multi-step booking wizard — service selection, calendar date/time picker, client details, 40% deposit preview",
+    "/admin/login": "branded luxury security gate — salon emblem, single-pass administrator login box",
+    "/admin": "high-density nail salon control center — schedule calendar, client booking queue, service catalog manager, WhatsApp mock dispatch queue, salon configuration"
+  },
+  "image_urls": {
+    "hero_banner": {
+      "url": "https://images.unsplash.com/photo-1632345031435-8727f6897d53?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NjV8MHwxfHNlYXJjaHwxfHxuYWlsJTIwYXJ0JTIwbWFuaWN1cmUlMjBzYWxvbnxlbnwwfHx8fDE3OTA5NDM0MzF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Nail designer applying precision gel polish on client hand in luxury salon",
+      "category": "hero"
+    },
+    "manicurist_profile": {
+      "url": "https://images.unsplash.com/photo-1663229050022-10896e8ea58a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwyfHx3b21hbiUyMG1hbmljdXJpc3QlMjBwb3J0cmFpdCUyMHNhbG9ufGVufDB8fHx8MTc5MDk0MzQzMXww&ixlib=rb-4.1.0&q=85",
+      "description": "Professional nail designer working meticulously with precision micro-drill",
+      "category": "about_professional"
+    },
+    "service_manicure_gel": {
+      "url": "https://images.unsplash.com/photo-1690749138086-7422f71dc159?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NjV8MHwxfHNlYXJjaHwyfHxuYWlsJTIwYXJ0JTIwbWFuaWN1cmUlMjBzYWxvbnxlbnwwfHx8fDE3OTA5NDM0MzF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Luxury gel nail sculpting and artistic polish",
+      "category": "services"
+    },
+    "service_nail_art": {
+      "url": "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NjV8MHwxfHNlYXJjaHwzfHxuYWlsJTIwYXJ0JTIwbWFuaWN1cmUlMjBzYWxvbnxlbnwwfHx8fDE3OTA5NDM0MzF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Creative nail art manicure with modern vibrant accents",
+      "category": "services"
+    },
+    "service_spa_pedicure": {
+      "url": "https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNDR8MHwxfHNlYXJjaHwxfHxwZWRpY3VyZSUyMHNwYSUyMHRyZWF0bWVudHxlbnwwfHx8fDE3OTA5NDM0MzF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Spa pedicure treatment with warm water floral petals and exfoliating care",
+      "category": "services"
+    },
+    "service_pedicure_exfoliation": {
+      "url": "https://images.unsplash.com/photo-1519419451778-14599a49ec41?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNDR8MHwxfHNlYXJjaHwyfHxwZWRpY3VyZSUyMHNwYSUyMHRyZWF0bWVudHxlbnwwfHx8fDE3OTA5NDM0MzF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Foot spa moisturizing massage and cuticle renewal",
+      "category": "services"
+    },
+    "service_natural_care": {
+      "url": "https://images.unsplash.com/photo-1610992015732-2449b76344bc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NjV8MHwxfHNlYXJjaHw0fHxuYWlsJTIwYXJ0JTIwbWFuaWN1cmUlMjBzYWxvbnxlbnwwfHx8fDE3OTA5NDM0MzF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Natural elegant nude manicure with soft glossy finish",
+      "category": "services"
+    }
+  },
+  "layout_and_grids": {
+    "system": "Mobile-First Hybrid: Full-width responsive with centered max-w-7xl containers for landing and sticky responsive bottom-sheet action bar on mobile",
+    "bento_features": "3-column asymmetric grid on desktop (col-span-12: 5-col narrative, 7-col interactive service preview)",
+    "admin_layout": "Sidebar navigation + high-density tabbed workspace (Agenda diária/semanal, Gestão de Serviços CRUD, Fila de WhatsApp com preview e botão de envio, Configurações de Horário e Perfil)"
+  },
+  "motion_and_microinteractions": {
+    "engine": "motion/react",
+    "transitions": "Smooth scale on service hover (scale-[1.02]), subtle fade-in up on scroll with staggerChildren: 0.08s",
+    "booking_wizard": "AnimatePresence slide horizontally between booking steps (1: Serviço -> 2: Data/Hora -> 3: Dados Pessoais -> 4: Sinal 40% & Confirmação)"
+  },
+  "accessibility": {
+    "contrast_standard": "WCAG AA (minimum 4.5:1 on all text against respective background surfaces)",
+    "data_testids": "Strict role-based kebab-case data-testid on every interactive element, input, filter, tab, and CTA button",
+    "touch_targets": "Minimum 44px on mobile booking buttons, slot pills, and date triggers"
+  },
+  "brazilian_locale_standards": {
+    "currency": "BRL (R$ 00,00 formatted via Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }))",
+    "deposit_rate": "40% do valor total calculado automaticamente com valor restante pago no local (60%)",
+    "phone_mask": "WhatsApp no formato brasileiro +55 (DD) 9XXXX-XXXX com link wa.me pronto",
+    "business_hours": "Segunda a Sábado das 09:00 às 19:00 (configurável no painel)",
+    "payment_gateway": "Demonstração Mercado Pago (PIX com QR Code copy-paste simulado + Cartão de Crédito em modo sandbox transparente)"
+  },
+  "component_hierarchy": [
+    "frontend/src/components/layout/Navbar.tsx (Logo Bella Nails, Links, WhatsApp direct, Agendar Agora CTA, Admin lock button)",
+    "frontend/src/components/landing/HeroSection.tsx (Apresentação sofisticada, badges de biossegurança e técnica exclusiva)",
+    "frontend/src/components/landing/ServicesSection.tsx (Filtros: Todos, Manicure, Pedicure, Alongamento & Nail Art)",
+    "frontend/src/components/landing/AboutProfessional.tsx (Bio da Nail Designer Isabella Martins, certificados, fotos e espaço físico)",
+    "frontend/src/components/landing/LocationSchedule.tsx (Horário de funcionamento, endereço no Google Maps mock/embed, link Instagram)",
+    "frontend/src/components/landing/WhatsAppFloatingButton.tsx (Botão flutuante animado com contagem de resposta rápida)",
+    "frontend/src/components/booking/BookingWizard.tsx (Modal ou página de agendamento em 4 passos com validação rigorosa)",
+    "frontend/src/components/booking/PaymentStep.tsx (Cálculo 40% de sinal, chave PIX Copia-e-Cola com temporizador e QR Code, simulação de aprovação)",
+    "frontend/src/components/booking/BookingSuccessModal.tsx (Resumo do agendamento, código de confirmação, download de comprovante e botão de aviso WhatsApp)",
+    "frontend/src/pages/AdminDashboard.tsx (Tabs: Calendário de Agendamentos, Gerenciador de Serviços CRUD, Fila de Mensagens WhatsApp Mock, Configurações de Horários e Perfil)",
+    "frontend/src/pages/AdminLogin.tsx (Login com senha mestra para Nail Designer)"
+  ],
+  "instructions_to_main_agent": [
+    "1. Adotar visual feminino, elegante e de alta conversão: tons terracota suave (#9F5B60), fundo quente linho/marfim (#FAF7F5), toques dourados (#C29B38) e tipografia clássica Playfair Display.",
+    "2. Implementar fluxo completo de agendamento com verificação real de conflito de horários: clientes só veem slots livres dentro do horário comercial (ex: 09:00 às 19:00, intervalos de 30/60min conforme duração do serviço).",
+    "3. No checkout, calcular o Sinal de 40% (ex: serviço de R$ 120,00 -> Sinal R$ 48,00 / Restante no local R$ 72,00) com opção de PIX Dinâmico (simulado com timer de 15min e QR Code) e Cartão.",
+    "4. WhatsApp MOCK: criar sistema de fila que armazena mensagens automáticas de confirmação, lembrete do dia e 15 minutos antes. Permitir que no painel a profissional veja essas mensagens e clique em 'Enviar no WhatsApp' (disparando o link wa.me com mensagem pré-formatada).",
+    "5. Painel Admin completo e protegido por senha padrão (ex: 'admin123' ou configurável), com CRUD de serviços (incluindo upload/URL de foto, preço, duração em minutos, categoria Manicure/Pedicure/Outros e status ativo/inativo).",
+    "6. Incluir dados iniciais ricos (seed) com serviços reais populares no Brasil: Fibra de Vidro, Gel Moldado, Esmaltação em Gel, Spa dos Pés, Blindagem Diamante, Cutilagem Russa.",
+    "7. Todas as ações e inputs devem ter 'data-testid' descritivos para testes automatizados."
+  ]
+}
