@@ -35,7 +35,7 @@ Coleção `messages` (kind: confirmacao | lembrete_dia | lembrete_15min, status 
 - Cancelamento pelo admin não gera crédito.
 
 ## Mercado Pago
-Pronto para uso real: preencher MP_ACCESS_TOKEN em backend/.env e reiniciar backend (PUBLIC_APP_URL já configurado). Sem token = modo demo.
+ATIVO: MP_ACCESS_TOKEN (conta vendedora de TESTE, site MLB) configurado em backend/.env → /today retorna payment_mode "mercadopago"; /bookings/{id}/demo-pay retorna 403. Checkout Pro redireciona para mercadopago.com.br; retorno em /pagamento/resultado. Cartão teste aprovado: 5031 4332 1540 6351, CVV 123, 11/30, titular APRO, CPF 12345678909.
 
 ## Seed
 `cd /app/backend && python seed.py` — 7 serviços (Manicure tradicional R$35/40min, Esmaltação R$25/30, Manicure + esmaltação R$50/60, Esmaltação em gel R$90/90, Pedicure tradicional R$40/45, Pedicure + esmaltação R$60/60, Spa dos pés R$80/60) e configurações padrão (Seg–Sáb 09:00–19:00, domingo fechado).
