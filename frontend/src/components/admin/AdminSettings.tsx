@@ -71,6 +71,7 @@ function SettingsForm({ initial }: { initial: SettingsModel }) {
           <div className="grid grid-cols-2 gap-3 border-t pt-4">
             <div className="space-y-1.5"><Label>Intervalo entre horários (min)</Label><Input type="number" min={10} step={5} value={form.slot_interval} onChange={(e) => setForm({ ...form, slot_interval: Number(e.target.value) })} data-testid="settings-slot-interval" /></div>
             <div className="space-y-1.5"><Label>Sinal (%)</Label><Input type="number" min={1} max={100} value={form.deposit_percent} onChange={(e) => setForm({ ...form, deposit_percent: Number(e.target.value) })} data-testid="settings-deposit-percent" /></div>
+            <div className="col-span-2 space-y-1.5"><Label>Cliente pode remarcar/cancelar até (horas antes)</Label><Input type="number" min={0} max={168} value={form.reschedule_hours} onChange={(e) => setForm({ ...form, reschedule_hours: Number(e.target.value) })} data-testid="settings-reschedule-hours" /></div>
           </div>
         </section>
       </div>

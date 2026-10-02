@@ -21,6 +21,9 @@ INDEXES: dict[str, list[IndexModel]] = {
     "services": [IndexModel([("id", ASCENDING)], name="id", unique=True), IndexModel([("active", ASCENDING), ("price", ASCENDING)], name="active_price")],
     "bookings": [IndexModel([("id", ASCENDING)], name="id", unique=True), IndexModel([("date", ASCENDING), ("time", ASCENDING)], name="date_time"), IndexModel([("status", ASCENDING)], name="status")],
     "messages": [IndexModel([("id", ASCENDING)], name="id", unique=True), IndexModel([("booking_id", ASCENDING), ("kind", ASCENDING)], name="booking_kind"), IndexModel([("created_at", DESCENDING)], name="created_desc")],
+    "blocks": [IndexModel([("id", ASCENDING)], name="id", unique=True), IndexModel([("date", ASCENDING), ("start", ASCENDING)], name="date_start")],
+    "gallery": [IndexModel([("id", ASCENDING)], name="id", unique=True), IndexModel([("created_at", DESCENDING)], name="created_desc")],
+    "credits": [IndexModel([("phone", ASCENDING)], name="phone")],
 }
 
 

@@ -4,9 +4,9 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Response
 
 from lib.auth import COOKIE, make_token, require_admin
-from lib.booking_logic import get_settings, process_reminders
+from lib.booking_logic import get_settings, now_local, process_reminders
 from lib.db import db
-from models.schemas import Booking, BookingStatusUpdate, LoginIn, Message, OkOut, Service, ServiceIn, SettingsModel
+from models.schemas import Block, BlockIn, Booking, BookingStatusUpdate, GalleryIn, GalleryItem, LoginIn, Message, OkOut, Service, ServiceIn, SettingsModel
 
 router = APIRouter(prefix="/admin")
 protected = APIRouter(prefix="/admin", dependencies=[Depends(require_admin)])
@@ -45,7 +45,7 @@ async def list_bookings(date: Optional[str] = None, status: Optional[str] = None
 
 @protected.patch("/bookings/{id}", response_model=Booking)
 async def update_booking(id: str, body: BookingStatusUpdate):
-    res = await db.bookings.find_one_and_update({"id": id}, {"$set": {"status": body.status}}, projection={"_id": 0}, return_document=True)
+    res = await db.bookings.find_one_and_update({"id": id}, {"$set": {"status": body.status, **({"cancelled_by": "admin"} if body.status == "cancelado" else {})}}, projection={"_id": 0}, return_document=True)
     if not res:
         raise HTTPException(404, "Agendamento não encontrado")
     return Booking(**res)
@@ -95,6 +95,56 @@ async def mark_sent(id: str):
     if not res:
         raise HTTPException(404, "Mensagem não encontrada")
     return Message(**res)
+
+
+# ---- schedule blocks ----
+@protected.get("/blocks", response_model=list[Block])
+async def list_blocks():
+    docs = await db.blocks.find({"date": {"$gte": now_local().strftime("%Y-%m-%d")}}, {"_id": 0}).sort([("date", 1), ("start", 1)]).to_list(1000)
+    return [Block(**d) for d in docs]
+
+
+@protected.post("/blocks", response_model=Block)
+async def create_block(body: BlockIn):
+    if not body.all_day and body.start >= body.end:
+        raise HTTPException(400, "O horário final deve ser depois do inicial")
+    blk = Block(**body.model_dump())
+    if blk.all_day:
+        blk.start, blk.end = "00:00", "23:59"
+    await db.blocks.insert_one(blk.model_dump())
+    return blk
+
+
+@protected.delete("/blocks/{id}", response_model=OkOut)
+async def delete_block(id: str):
+    res = await db.blocks.delete_one({"id": id})
+    if not res.deleted_count:
+        raise HTTPException(404, "Bloqueio não encontrado")
+    return OkOut()
+
+
+# ---- gallery ----
+@protected.post("/gallery", response_model=GalleryItem)
+async def add_gallery(body: GalleryIn):
+    item = GalleryItem(**body.model_dump())
+    await db.gallery.insert_one(item.model_dump())
+    return item
+
+
+@protected.put("/gallery/{id}", response_model=GalleryItem)
+async def update_gallery(id: str, body: GalleryIn):
+    res = await db.gallery.find_one_and_update({"id": id}, {"$set": body.model_dump()}, projection={"_id": 0}, return_document=True)
+    if not res:
+        raise HTTPException(404, "Foto não encontrada")
+    return GalleryItem(**res)
+
+
+@protected.delete("/gallery/{id}", response_model=OkOut)
+async def delete_gallery(id: str):
+    res = await db.gallery.delete_one({"id": id})
+    if not res.deleted_count:
+        raise HTTPException(404, "Foto não encontrada")
+    return OkOut()
 
 
 # ---- settings ----

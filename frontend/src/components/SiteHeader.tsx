@@ -24,6 +24,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
         </Link>
         <nav className="hidden items-center gap-7 text-sm md:flex">
           <a href="/#servicos" data-testid="nav-services-link" className="opacity-80 transition-opacity hover:opacity-100">Serviços</a>
+          <a href="/#trabalhos" data-testid="nav-gallery-link" className="opacity-80 transition-opacity hover:opacity-100">Trabalhos</a>
           <a href="/#sobre" data-testid="nav-about-link" className="opacity-80 transition-opacity hover:opacity-100">Sobre</a>
           <a href="/#contato" data-testid="nav-contact-link" className="opacity-80 transition-opacity hover:opacity-100">Contato</a>
         </nav>

@@ -1,7 +1,7 @@
 // Hand-written mirrors of backend/models/schemas.py — keep in sync.
 export type Category = "manicure" | "pedicure" | "outros";
 export type BookingStatus = "aguardando_pagamento" | "confirmado" | "concluido" | "cancelado";
-export type MessageKind = "confirmacao" | "lembrete_dia" | "lembrete_15min";
+export type MessageKind = "confirmacao" | "lembrete_dia" | "lembrete_15min" | "remarcacao" | "cancelamento";
 
 export interface ServiceIn {
   name: string;
@@ -37,7 +37,48 @@ export interface SettingsModel {
   service_info: string;
   slot_interval: number;
   deposit_percent: number;
+  reschedule_hours: number;
+  lunch_enabled: boolean;
+  lunch_start: string;
+  lunch_end: string;
   hours: DayHours[];
+}
+
+export interface BlockIn {
+  date: string;
+  all_day: boolean;
+  start: string;
+  end: string;
+  reason: string;
+}
+
+export interface Block extends BlockIn {
+  id: string;
+}
+
+export interface GalleryIn {
+  image_url: string;
+  caption: string;
+}
+
+export interface GalleryItem extends GalleryIn {
+  id: string;
+  created_at: string;
+}
+
+export interface RescheduleIn {
+  date: string;
+  time: string;
+}
+
+export interface BookingPolicy {
+  can_change: boolean;
+  deadline: string;
+  hours: number;
+}
+
+export interface CreditInfo {
+  balance: number;
 }
 
 export interface Availability {
@@ -75,6 +116,9 @@ export interface Booking {
   client_email: string | null;
   deposit_amount: number;
   remaining_amount: number;
+  credit_applied: number;
+  reschedule_count: number;
+  cancelled_by: "cliente" | "admin" | null;
   status: BookingStatus;
   payment_id: string | null;
   payment_method: string | null;

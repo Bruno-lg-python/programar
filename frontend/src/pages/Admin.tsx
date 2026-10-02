@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { CalendarDays, ExternalLink, Loader2, LogOut, MessageCircle, Scissors, Settings, Sparkles } from "lucide-react";
+import { CalendarDays, CalendarOff, ExternalLink, Images, Loader2, LogOut, MessageCircle, Scissors, Settings, Sparkles } from "lucide-react";
 import { apiGet, apiPost, ApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { Message, OkOut } from "@/lib/types";
@@ -9,11 +9,15 @@ import AdminBookings from "@/components/admin/AdminBookings";
 import AdminServices from "@/components/admin/AdminServices";
 import AdminMessages from "@/components/admin/AdminMessages";
 import AdminSettings from "@/components/admin/AdminSettings";
+import AdminBlocks from "@/components/admin/AdminBlocks";
+import AdminGallery from "@/components/admin/AdminGallery";
 
-type Tab = "agenda" | "servicos" | "whatsapp" | "config";
+type Tab = "agenda" | "bloqueios" | "servicos" | "galeria" | "whatsapp" | "config";
 const TABS: { key: Tab; label: string; icon: typeof CalendarDays }[] = [
   { key: "agenda", label: "Agenda", icon: CalendarDays },
+  { key: "bloqueios", label: "Bloqueios", icon: CalendarOff },
   { key: "servicos", label: "Serviços", icon: Scissors },
+  { key: "galeria", label: "Galeria", icon: Images },
   { key: "whatsapp", label: "WhatsApp", icon: MessageCircle },
   { key: "config", label: "Configurações", icon: Settings },
 ];
@@ -72,7 +76,9 @@ export default function Admin() {
       </aside>
       <main className="min-w-0 flex-1 p-5 sm:p-8">
         {tab === "agenda" && <AdminBookings />}
+        {tab === "bloqueios" && <AdminBlocks />}
         {tab === "servicos" && <AdminServices />}
+        {tab === "galeria" && <AdminGallery />}
         {tab === "whatsapp" && <AdminMessages />}
         {tab === "config" && <AdminSettings />}
       </main>

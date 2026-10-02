@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiGet, ApiError } from "@/lib/api";
-import type { Category, BookingStatus, SettingsModel, TodayInfo, Service } from "@/lib/types";
+import type { Category, BookingStatus, GalleryItem, SettingsModel, TodayInfo, Service } from "@/lib/types";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 export const money = (v: number) => brl.format(v);
@@ -55,3 +55,4 @@ export const useSettings = () => useQuery({ queryKey: ["settings"], queryFn: () 
 export const useToday = () => useQuery({ queryKey: ["today"], queryFn: () => apiGet<TodayInfo>("/today") });
 export const useServices = () => useQuery({ queryKey: ["services"], queryFn: () => apiGet<Service[]>("/services") });
 export const FALLBACK_IMG = "https://images.unsplash.com/photo-1610992015732-2449b76344bc?crop=entropy&cs=srgb&fm=jpg&q=80&w=900";
+export const useGallery = () => useQuery({ queryKey: ["gallery"], queryFn: () => apiGet<GalleryItem[]>("/gallery") });

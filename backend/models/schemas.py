@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 Category = Literal["manicure", "pedicure", "outros"]
 BookingStatus = Literal["aguardando_pagamento", "confirmado", "concluido", "cancelado"]
-MessageKind = Literal["confirmacao", "lembrete_dia", "lembrete_15min"]
+MessageKind = Literal["confirmacao", "lembrete_dia", "lembrete_15min", "remarcacao", "cancelamento"]
 
 
 def _id() -> str:
@@ -51,7 +51,48 @@ class SettingsModel(BaseModel):
     service_info: str
     slot_interval: int = 30
     deposit_percent: int = 40
+    reschedule_hours: int = 24
+    lunch_enabled: bool = False
+    lunch_start: str = "12:00"
+    lunch_end: str = "13:00"
     hours: list[DayHours]
+
+
+class BlockIn(BaseModel):
+    date: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
+    all_day: bool = True
+    start: str = "00:00"
+    end: str = "23:59"
+    reason: str = ""
+
+
+class Block(BlockIn):
+    id: str = Field(default_factory=_id)
+
+
+class GalleryIn(BaseModel):
+    image_url: str = Field(min_length=8)
+    caption: str = ""
+
+
+class GalleryItem(GalleryIn):
+    id: str = Field(default_factory=_id)
+    created_at: datetime = Field(default_factory=_now)
+
+
+class RescheduleIn(BaseModel):
+    date: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
+    time: str = Field(pattern=r"^\d{2}:\d{2}$")
+
+
+class BookingPolicy(BaseModel):
+    can_change: bool
+    deadline: str
+    hours: int
+
+
+class CreditInfo(BaseModel):
+    balance: float
 
 
 class Slot(BaseModel):
@@ -91,8 +132,11 @@ class Booking(BaseModel):
     client_name: str
     client_whatsapp: str
     client_email: Optional[str] = None
-    deposit_amount: float
+    deposit_amount: float  # cash to pay online (after credit)
     remaining_amount: float
+    credit_applied: float = 0
+    reschedule_count: int = 0
+    cancelled_by: Optional[Literal["cliente", "admin"]] = None
     status: BookingStatus = "aguardando_pagamento"
     payment_id: Optional[str] = None
     payment_method: Optional[str] = None

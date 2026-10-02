@@ -1,29 +1,27 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
-import { format, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { ArrowLeft, Check, Clock, Loader2 } from "lucide-react";
+import { ArrowLeft, Check, Clock, Gift, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SiteHeader from "@/components/SiteHeader";
+import DateSlotPicker from "@/components/DateSlotPicker";
 import { apiGet, apiPost } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { CATEGORY_LABEL, FALLBACK_IMG, errMsg, fmtDateLong, fmtDuration, maskPhone, money, onlyDigits, useServices, useSettings, useToday } from "@/lib/format";
-import type { Availability, Booking, BookingCreate, CheckoutResponse } from "@/lib/types";
+import { CATEGORY_LABEL, FALLBACK_IMG, errMsg, fmtDateLong, fmtDuration, maskPhone, money, onlyDigits, useServices, useSettings } from "@/lib/format";
+import type { Booking, BookingCreate, CheckoutResponse, CreditInfo } from "@/lib/types";
 
 const STEPS = ["Serviço", "Data e horário", "Seus dados", "Resumo"];
 
 export default function Agendar() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const { data: services, isLoading } = useServices();
   const { data: settings } = useSettings();
-  const { data: today } = useToday();
 
   const [serviceId, setServiceId] = useState<string>(params.get("servico") ?? "");
   const [step, setStep] = useState(params.get("servico") ? 1 : 0);
@@ -34,37 +32,36 @@ export default function Agendar() {
   const [email, setEmail] = useState("");
 
   const service = services?.find((s) => s.id === serviceId);
-  const dateRef = useRef<HTMLParagraphElement>(null);
-  useEffect(() => {
-    if (date && window.innerWidth < 768) dateRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [date]);
   const pct = settings?.deposit_percent ?? 40;
   const deposit = service ? Math.round(service.price * pct) / 100 : 0;
+  const phoneDigits = onlyDigits(phone);
 
-  const avail = useQuery({
-    queryKey: ["availability", serviceId, date],
-    queryFn: () => apiGet<Availability>(`/availability?service_id=${serviceId}&date=${date}`),
-    enabled: !!serviceId && !!date,
+  const creditQ = useQuery({
+    queryKey: ["credits", phoneDigits],
+    queryFn: () => apiGet<CreditInfo>(`/credits?whatsapp=${phoneDigits}`),
+    enabled: step === 3 && phoneDigits.length >= 10,
   });
-
-  const closedDays = useMemo(() => (settings?.hours ?? []).filter((h) => !h.open).map((h) => (h.day + 1) % 7), [settings]);
-  const minDate = today ? parseISO(today.today) : new Date();
-  const maxDate = new Date(minDate.getTime() + 90 * 86400000);
+  const credit = Math.min(creditQ.data?.balance ?? 0, deposit);
+  const toPay = Math.round((deposit - credit) * 100) / 100;
 
   const book = useMutation({
-    mutationFn: async () => {
-      const body: BookingCreate = { service_id: serviceId, date, time, client_name: name.trim(), client_whatsapp: onlyDigits(phone), client_email: email.trim() || null };
+    mutationFn: async (): Promise<{ booking: Booking; checkout: CheckoutResponse | null }> => {
+      const body: BookingCreate = { service_id: serviceId, date, time, client_name: name.trim(), client_whatsapp: phoneDigits, client_email: email.trim() || null };
       const booking = await apiPost<Booking>("/bookings", body);
+      if (booking.status === "confirmado") return { booking, checkout: null };
       const checkout = await apiPost<CheckoutResponse>(`/bookings/${booking.id}/checkout`);
-      return checkout;
+      return { booking, checkout };
     },
-    onSuccess: (c) => {
-      if (c.mode === "demo") navigate(c.url);
-      else window.location.assign(c.url);
+    onSuccess: ({ booking, checkout }) => {
+      if (!checkout) {
+        qc.setQueryData(["booking", booking.id], booking);
+        navigate(`/agendamento/${booking.id}?pago=1`);
+      } else if (checkout.mode === "demo") navigate(checkout.url);
+      else window.location.assign(checkout.url);
     },
     onError: (e) => {
       toast.error(errMsg(e));
-      avail.refetch();
+      qc.invalidateQueries({ queryKey: ["availability"] });
     },
   });
 
@@ -123,46 +120,8 @@ export default function Agendar() {
                 <BackBtn onClick={() => go(0)} />
                 <h2 className="text-2xl">Escolha a data e o horário</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{service.name} • {fmtDuration(service.duration)}</p>
-                <div className="mt-6 grid gap-6 md:grid-cols-[auto_1fr]">
-                  <div className="rounded-2xl border bg-card p-3" data-testid="booking-calendar">
-                    <Calendar
-                      mode="single"
-                      locale={ptBR}
-                      selected={date ? parseISO(date) : undefined}
-                      onSelect={(d) => { if (d) { setDate(format(d, "yyyy-MM-dd")); setTime(""); } }}
-                      disabled={[{ before: minDate }, { after: maxDate }, { dayOfWeek: closedDays }]}
-                      className="[--cell-size:2.6rem]"
-                    />
-                  </div>
-                  <div>
-                    {!date && <p className="rounded-2xl border border-dashed p-6 text-sm text-muted-foreground" data-testid="booking-select-date-hint">Selecione uma data no calendário para ver os horários disponíveis.</p>}
-                    {date && (
-                      <>
-                        <p ref={dateRef} className="scroll-mt-20 font-medium first-letter:uppercase" data-testid="booking-selected-date">{fmtDateLong(date)}</p>
-                        {avail.isLoading && <Loader2 className="mt-4 size-6 animate-spin text-primary" />}
-                        {avail.isError && <p className="mt-4 text-sm text-destructive">Não foi possível carregar os horários.</p>}
-                        {avail.data && avail.data.slots.length === 0 && (
-                          <p className="mt-4 rounded-2xl bg-blush p-5 text-sm" data-testid="booking-no-slots">Sem horários disponíveis nesta data. Tente outro dia 💕</p>
-                        )}
-                        <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
-                          {avail.data?.slots.map((t) => (
-                            <button
-                              key={t}
-                              type="button"
-                              data-testid={`booking-slot-${t.replace(":", "")}`}
-                              onClick={() => setTime(t)}
-                              className={cn(
-                                "h-11 rounded-xl border text-sm font-medium transition-colors",
-                                time === t ? "border-primary bg-primary text-white" : "bg-card hover:border-primary/60",
-                              )}
-                            >
-                              {t}
-                            </button>
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </div>
+                <div className="mt-6">
+                  <DateSlotPicker serviceId={serviceId} date={date} time={time} onDate={setDate} onTime={setTime} />
                 </div>
                 <StickyNext disabled={!date || !time} onClick={() => go(2)} testid="booking-next-to-details" label="Continuar" />
               </div>
@@ -203,20 +162,26 @@ export default function Agendar() {
                     <Row label="WhatsApp" value={phone} testid="summary-whatsapp" />
                     <Row label="Valor total" value={money(service.price)} testid="summary-total" />
                   </div>
+                  {credit > 0 && (
+                    <div className="flex items-center justify-between border-t px-6 py-3 text-sm" data-testid="summary-credit">
+                      <span className="flex items-center gap-2 text-[#15803D]"><Gift className="size-4" /> Crédito de cancelamento</span>
+                      <span className="font-medium text-[#15803D]">− {money(credit)}</span>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between bg-blush px-6 py-5">
                     <div>
-                      <p className="text-sm font-medium">Sinal para confirmar ({pct}%)</p>
+                      <p className="text-sm font-medium">{credit > 0 ? "Sinal a pagar agora" : `Sinal para confirmar (${pct}%)`}</p>
                       <p className="text-xs text-muted-foreground">Restante {money(service.price - deposit)} no dia do atendimento</p>
                     </div>
-                    <p className="font-heading text-3xl text-primary" data-testid="summary-deposit">{money(deposit)}</p>
+                    <p className="font-heading text-3xl text-primary" data-testid="summary-deposit">{money(toPay)}</p>
                   </div>
                 </div>
                 <p className="mt-4 text-xs text-muted-foreground">Seu horário fica reservado por 30 minutos até a confirmação do pagamento. Você receberá a confirmação pelo WhatsApp.</p>
                 <StickyNext
-                  disabled={book.isPending}
+                  disabled={book.isPending || creditQ.isLoading}
                   onClick={() => book.mutate()}
                   testid="booking-pay-button"
-                  label={book.isPending ? "Reservando..." : `Pagar sinal de ${money(deposit)}`}
+                  label={book.isPending ? "Reservando..." : toPay <= 0 ? "Confirmar com meu crédito" : `Pagar sinal de ${money(toPay)}`}
                 />
               </div>
             )}
@@ -239,7 +204,7 @@ function Row({ label, value, testid }: { label: string; value: string; testid: s
   return (
     <div className="flex justify-between gap-4">
       <span className="text-muted-foreground">{label}</span>
-      <span className="text-right font-medium" data-testid={testid}>{value}</span>
+      <span className="inline-block text-right font-medium first-letter:uppercase" data-testid={testid}>{value}</span>
     </div>
   );
 }

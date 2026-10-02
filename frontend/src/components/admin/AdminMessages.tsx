@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { maskPhone, waLink } from "@/lib/format";
 import type { Message, MessageKind } from "@/lib/types";
 
-const KIND_LABEL: Record<MessageKind, string> = { confirmacao: "Confirmação", lembrete_dia: "Lembrete do dia", lembrete_15min: "15 min antes" };
+const KIND_LABEL: Record<MessageKind, string> = { confirmacao: "Confirmação", lembrete_dia: "Lembrete do dia", lembrete_15min: "15 min antes", remarcacao: "Remarcação", cancelamento: "Cancelamento" };
 
 export default function AdminMessages() {
   const qc = useQueryClient();

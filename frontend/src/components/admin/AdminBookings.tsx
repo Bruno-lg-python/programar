@@ -80,7 +80,8 @@ export default function AdminBookings() {
                 <Badge className={cn("rounded-full border-0", STATUS_STYLE[b.status])} data-testid={`admin-booking-status-${b.id}`}>{STATUS_LABEL[b.status]}</Badge>
               </div>
               <p className="mt-0.5 text-sm text-muted-foreground">{b.service_name} • até {b.end_time} • <span className="inline-block first-letter:uppercase">{fmtDateLong(b.date)}</span></p>
-              <p className="mt-0.5 text-xs text-muted-foreground">{maskPhone(b.client_whatsapp)}{b.client_email ? ` • ${b.client_email}` : ""} • Sinal {money(b.deposit_amount)} / Total {money(b.service_price)} • {b.code}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">{maskPhone(b.client_whatsapp)}{b.client_email ? ` • ${b.client_email}` : ""} • Sinal {money(b.deposit_amount + b.credit_applied)}{b.credit_applied > 0 ? ` (crédito ${money(b.credit_applied)})` : ""} / Total {money(b.service_price)} • {b.code}
+                {b.reschedule_count > 0 ? ` • remarcado ${b.reschedule_count}x` : ""}{b.cancelled_by ? ` • cancelado pela ${b.cancelled_by === "cliente" ? "cliente (sinal virou crédito)" : "profissional"}` : ""}</p>
             </div>
             <div className="flex shrink-0 gap-2">
               <a href={waLink(b.client_whatsapp)} target="_blank" rel="noreferrer" data-testid={`admin-booking-whatsapp-${b.id}`} className="grid size-9 place-items-center rounded-full border text-[#15803D] transition-colors hover:bg-[#DCF8C6]" aria-label="WhatsApp">

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { cn } from "@/lib/utils";
-import { CATEGORY_LABEL, DAY_LABEL, FALLBACK_IMG, fmtDuration, money, useServices, useSettings, waLink } from "@/lib/format";
+import { CATEGORY_LABEL, DAY_LABEL, FALLBACK_IMG, fmtDuration, money, useGallery, useServices, useSettings, waLink } from "@/lib/format";
 import type { Category } from "@/lib/types";
 
 const HERO = "https://images.unsplash.com/photo-1632345031435-8727f6897d53?crop=entropy&cs=srgb&fm=jpg&q=85&w=1800";
@@ -16,6 +16,7 @@ const FILTERS: Array<"todos" | Category> = ["todos", "manicure", "pedicure", "ou
 export default function Home() {
   const { data: s } = useSettings();
   const { data: services, isLoading, isError } = useServices();
+  const { data: gallery } = useGallery();
   const [filter, setFilter] = useState<"todos" | Category>("todos");
   const list = (services ?? []).filter((x) => filter === "todos" || x.category === filter);
   const wa = waLink(s?.whatsapp ?? "11987654321", "Olá! Gostaria de saber mais sobre os atendimentos.");
@@ -127,6 +128,41 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* GALLERY */}
+      {!!gallery?.length && (
+        <section id="trabalhos" className="mx-auto max-w-7xl scroll-mt-20 px-5 pb-20 sm:px-8 md:pb-28" data-testid="gallery-section">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase">Trabalhos</p>
+              <h2 className="mt-3 text-3xl sm:text-4xl">Um pouco do meu portfólio</h2>
+            </div>
+            {s && (
+              <a href={`https://instagram.com/${s.instagram}`} target="_blank" rel="noreferrer" data-testid="gallery-instagram-link" className="flex items-center gap-2 text-sm text-primary hover:underline">
+                <Instagram className="size-4" /> Veja mais em @{s.instagram}
+              </a>
+            )}
+          </div>
+          <div className="mt-10 columns-2 gap-4 md:columns-3 [&>figure]:mb-4">
+            {gallery.map((g, i) => (
+              <motion.figure
+                key={g.id}
+                data-testid={`gallery-item-${g.id}`}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: (i % 6) * 0.06 }}
+                className="group relative break-inside-avoid overflow-hidden rounded-3xl"
+              >
+                <img src={g.image_url} alt={g.caption || "Trabalho"} loading="lazy" className={cn("w-full object-cover transition-transform duration-500 group-hover:scale-105", i % 3 === 0 ? "aspect-[3/4]" : "aspect-square")} />
+                {g.caption && (
+                  <figcaption className="absolute inset-x-3 bottom-3 rounded-full bg-white/80 px-3 py-1.5 text-xs font-medium backdrop-blur transition-opacity md:opacity-0 md:group-hover:opacity-100">{g.caption}</figcaption>
+                )}
+              </motion.figure>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ABOUT */}
       <section id="sobre" className="scroll-mt-20 bg-blush">

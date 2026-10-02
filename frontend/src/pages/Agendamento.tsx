@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import ManageBooking from "@/components/ManageBooking";
 import { apiGet, apiPost } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { errMsg, fmtDateLong, money, STATUS_LABEL, useSettings, waLink } from "@/lib/format";
@@ -48,6 +49,7 @@ export default function Agendamento() {
                 <div className="flex justify-between"><dt className="text-muted-foreground">Data</dt><dd className="font-medium first-letter:uppercase" data-testid="booking-detail-date">{fmtDateLong(b.date)}</dd></div>
                 <div className="flex justify-between"><dt className="text-muted-foreground">Horário</dt><dd className="font-medium" data-testid="booking-detail-time">{b.time} – {b.end_time}</dd></div>
                 <div className="flex justify-between"><dt className="text-muted-foreground">Sinal {confirmed ? "pago" : ""}</dt><dd className="font-medium" data-testid="booking-detail-deposit">{money(b.deposit_amount)}</dd></div>
+                {b.credit_applied > 0 && <div className="flex justify-between"><dt className="text-muted-foreground">Crédito aplicado</dt><dd className="font-medium text-[#15803D]" data-testid="booking-detail-credit">{money(b.credit_applied)}</dd></div>}
                 <div className="flex justify-between"><dt className="text-muted-foreground">Restante no dia</dt><dd className="font-medium">{money(b.remaining_amount)}</dd></div>
               </dl>
               {s && (
@@ -58,6 +60,10 @@ export default function Agendamento() {
               <p className="mt-5 rounded-2xl bg-[#DCF8C6] p-4 text-sm text-[#064E3B]" data-testid="booking-whatsapp-note">
                 Você receberá a confirmação pelo WhatsApp, um lembrete no dia e outro 15 minutos antes do horário.
               </p>
+            )}
+            <ManageBooking booking={b} />
+            {b.cancelled_by === "cliente" && (
+              <p className="mt-5 rounded-2xl bg-[#DCF8C6] p-4 text-sm text-[#064E3B]" data-testid="booking-credit-note">Seu sinal de {money(b.deposit_amount + b.credit_applied)} ficou como crédito. Use o mesmo WhatsApp no próximo agendamento e ele será descontado automaticamente.</p>
             )}
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               {b.status === "aguardando_pagamento" && (
